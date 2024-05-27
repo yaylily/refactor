@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
 import { signUpValidator } from '../middlewares/validators/sign-up-validator.middleware.js';
+import { signInValidator } from '../middlewares/validators/sign-in-validator.middleware.js';
 import { prisma } from '../utils/prisma.util.js';
 import {
   ACCESS_TOKEN_EXPIRES_IN,
@@ -49,7 +50,7 @@ authRouter.post('/sign-up', signUpValidator, async (req, res, next) => {
   }
 });
 
-authRouter.post('/sign-in', async (req, res, next) => {
+authRouter.post('/sign-in', signInValidator, async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
