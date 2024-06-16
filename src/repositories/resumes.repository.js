@@ -13,7 +13,7 @@ export class ResumesRepository {
   };
 
   findAllResumes = async (authorId) => {
-    const resumes = await prisma.resume.findMany({
+    let resumes = await prisma.resume.findMany({
       where: { authorId: +authorId },
       orderBy: {
         createdAt: 'desc',
@@ -22,14 +22,35 @@ export class ResumesRepository {
         author: true,
       },
     });
+
+    resumes = resumes.map((resume) => {
+      return {
+        id: resume.id,
+        authorName: resume.author.name,
+        title: resume.title,
+        content: resume.content,
+        status: resume.status,
+        createdAt: resume.createdAt,
+        updatedAt: resume.updatedAt,
+      };
+    });
     return resumes;
   };
 
   findResumeById = async (id, authorId) => {
-    const resume = await prisma.resume.findUnique({
+    let resume = await prisma.resume.findUnique({
       where: { id: +id, authorId },
       include: { author: true },
     });
+    resume = {
+      id: resume.id,
+      authorName: resume.author.name,
+      title: resume.title,
+      content: resume.content,
+      status: resume.status,
+      createdAt: resume.createdAt,
+      updatedAt: resume.updatedAt,
+    };
     return resume;
   };
 
