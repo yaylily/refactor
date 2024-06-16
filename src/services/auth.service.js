@@ -1,4 +1,3 @@
-import { UsersRepository } from '../repositories/users.repository.js';
 import {
   ACCESS_TOKEN_EXPIRES_IN,
   HASH_SALT_ROUNDS,
@@ -8,10 +7,11 @@ import jwt from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET } from '../constants/env.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
+import { HttpError } from '../errors/http.error.js';
 
 export class AuthService {
-  constructor() {
-    this.usersRepository = new UsersRepository();
+  constructor(usersRepository) {
+    this.usersRepository = usersRepository;
   }
 
   signUp = async (email, password, name) => {
@@ -19,7 +19,7 @@ export class AuthService {
 
     // 이메일이 중복된 경우
     if (existedUser) {
-      throw new Error(MESSAGES.AUTH.COMMON.EMAIL.DUPLICATED);
+      throw new HttpError.Conflict(MESSAGES.AUTH.COMMON.EMAIL.DUPLICATED);
     }
 
     const hashedPassword = bcrypt.hashSync(password, HASH_SALT_ROUNDS);
@@ -41,7 +41,7 @@ export class AuthService {
       user && bcrypt.compareSync(password, user.password);
 
     if (!isPasswordMatched) {
-      throw new Error(MESSAGES.AUTH.COMMON.UNAUTHORIZED);
+      throw new HttpError.Unauthorized(MESSAGES.AUTH.COMMON.UNAUTHORIZED);
     }
 
     const payload = { id: user.id };

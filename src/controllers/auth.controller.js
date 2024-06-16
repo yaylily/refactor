@@ -1,9 +1,10 @@
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
-import { AuthService } from '../services/auth.service.js';
 
 export class AuthController {
-  authService = new AuthService();
+  constructor(authService) {
+    this.authService = authService;
+  }
   //사용자 조회 API
   signUp = async (req, res, next) => {
     try {

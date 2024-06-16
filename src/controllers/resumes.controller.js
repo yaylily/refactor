@@ -1,9 +1,11 @@
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
-import { ResumesService } from '../services/resumes.service.js';
 
 export class ResumesController {
-  resumesService = new ResumesService();
+  constructor(resumesService) {
+    this.resumesService = resumesService;
+  }
+
   createResume = async (req, res, next) => {
     try {
       const user = req.user;
@@ -51,13 +53,6 @@ export class ResumesController {
       const { id } = req.params;
 
       const resume = await this.resumesService.findResumeById(id, authorId);
-
-      if (!resume) {
-        return res.status(HTTP_STATUS.NOT_FOUND).json({
-          status: HTTP_STATUS.NOT_FOUND,
-          message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
-        });
-      }
 
       return res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,
