@@ -1,4 +1,4 @@
-import { HttpError } from '../errors/http.error';
+import { HttpError } from '../errors/http.error.js';
 
 export class ResumesService {
   constructor(resumesRepository) {
